@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class LogInfo{
 
+	
 	/** The searched strings. */
 	private List<SearchedString> searchedStrings;
 	
@@ -22,11 +23,31 @@ public class LogInfo{
 	private List<Application> applications;
 	
 	/** The moving status. */
-	private MovingStatus movingStatus;
+	private List<MovingStatus> movingStatuses;
 	
 	/** The input device. */
-	private InputDevice inputDevice;
+	private List<InputDevice> inputDevices;
 	
+	private MovingStatus currentStatus;
+	private SearchedString maxSearchedKeyword;
+	private InputDevice lastUsedInputDevice;
+	
+	public List<MovingStatus> getMovingStatuses() {
+		return movingStatuses;
+	}
+
+	public void setMovingStatuses(List<MovingStatus> movingStatuses) {
+		this.movingStatuses = movingStatuses;
+	}
+
+	public List<InputDevice> getInputDevices() {
+		return inputDevices;
+	}
+
+	public void setInputDevices(List<InputDevice> inputDevices) {
+		this.inputDevices = inputDevices;
+	}
+
 	/**
 	 * Gets the searched strings.
 	 *
@@ -62,42 +83,31 @@ public class LogInfo{
 	public void setApplications(List<Application> applications) {
 		this.applications = applications;
 	}
-	
-	/**
-	 * Gets the moving status.
-	 *
-	 * @return the moving status
-	 */
-	public MovingStatus getMovingStatus() {
-		return movingStatus;
+
+	public MovingStatus getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(MovingStatus currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+
+	public SearchedString getMaxSearchedKeyword() {
+		return maxSearchedKeyword;
+	}
+
+	public void setMaxSearchedKeyword(SearchedString maxSearchedKeyword) {
+		this.maxSearchedKeyword = maxSearchedKeyword;
+	}
+
+	public InputDevice getLastUsedInputDevice() {
+		return lastUsedInputDevice;
+	}
+
+	public void setLastUsedInputDevice(InputDevice lastUsedInputDevice) {
+		this.lastUsedInputDevice = lastUsedInputDevice;
 	}
 	
-	/**
-	 * Sets the moving status.
-	 *
-	 * @param movingStatus the new moving status
-	 */
-	public void setMovingStatus(MovingStatus movingStatus) {
-		this.movingStatus = movingStatus;
-	}
-	
-	/**
-	 * Gets the input device.
-	 *
-	 * @return the input device
-	 */
-	public InputDevice getInputDevice() {
-		return inputDevice;
-	}
-	
-	/**
-	 * Sets the input device.
-	 *
-	 * @param inputDevice the new input device
-	 */
-	public void setInputDevice(InputDevice inputDevice) {
-		this.inputDevice = inputDevice;
-	}
 
 
 

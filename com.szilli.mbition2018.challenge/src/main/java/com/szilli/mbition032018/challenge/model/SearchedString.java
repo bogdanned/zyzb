@@ -13,13 +13,14 @@ package com.szilli.mbition032018.challenge.model;
  */
 public class SearchedString {
 	
-	private Application application;
 	
 	/** The keyword searched. */
 	private String keywordSearched;
 	
 	/** The number of times searched. */
 	private int numberOfTimesSearched;
+	
+	private String applicationUsed;
 	
 	/**
 	 * Instantiates a new searched string.
@@ -33,9 +34,10 @@ public class SearchedString {
 	 * @param keywordSearched the keyword searched
 	 * @param numberOfTimesSearched the number of times searched
 	 */
-	public SearchedString(String keywordSearched, int numberOfTimesSearched) {
+	public SearchedString(String keywordSearched, int numberOfTimesSearched,String appUsed) {
 		this.keywordSearched = keywordSearched;
 		this.numberOfTimesSearched = numberOfTimesSearched;
+		this.applicationUsed = appUsed;
 	}
 
 	/**
@@ -45,14 +47,6 @@ public class SearchedString {
 	 */
 	public String getKeywordSearched() {
 		return keywordSearched;
-	}
-
-	public Application getApplication() {
-		return application;
-	}
-
-	public void setApplication(Application application) {
-		this.application = application;
 	}
 
 	/**
@@ -80,6 +74,14 @@ public class SearchedString {
 	 */
 	public void setNumberOfTimesSearched(int numberOfTimesSearched) {
 		this.numberOfTimesSearched = numberOfTimesSearched;
+	}
+
+	public String getApplicationUsed() {
+		return applicationUsed;
+	}
+
+	public void setApplicationUsed(String applicationUsed) {
+		this.applicationUsed = applicationUsed;
 	}
 	
 	

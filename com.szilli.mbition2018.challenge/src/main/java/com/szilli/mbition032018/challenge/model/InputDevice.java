@@ -1,19 +1,19 @@
 package com.szilli.mbition032018.challenge.model;
 
 public class InputDevice {
-	private String deviceAction;
+	private String name;
 	private int numberOfTimesUsed;
 	public InputDevice() {
 	}
 	public InputDevice(String deviceAction, int numberOfTimesUsed) {
-		this.deviceAction = deviceAction;
+		this.name = deviceAction;
 		this.numberOfTimesUsed = numberOfTimesUsed;
 	}
-	public String getDeviceAction() {
-		return deviceAction;
+	public String getDeviceName() {
+		return name;
 	}
-	public void setDeviceAction(String deviceAction) {
-		this.deviceAction = deviceAction;
+	public void setDeviceName(String deviceName) {
+		this.name = deviceName;
 	}
 	public int getNumberOfTimesUsed() {
 		return numberOfTimesUsed;
