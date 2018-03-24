@@ -11,7 +11,7 @@ package com.szilli.mbition032018.challenge.model;
 /**
  * The Class SearchedString.
  */
-public class SearchedString {
+public class SearchedString implements Comparable<SearchedString>{
 	
 	
 	/** The keyword searched. */
@@ -82,6 +82,16 @@ public class SearchedString {
 
 	public void setApplicationUsed(String applicationUsed) {
 		this.applicationUsed = applicationUsed;
+	}
+
+	@Override
+	public int compareTo(SearchedString other) {
+		if(this.getNumberOfTimesSearched() == other.getNumberOfTimesSearched())
+			return 0;
+		else if(this.getNumberOfTimesSearched() > other.getNumberOfTimesSearched())
+			return -1;
+		else			
+			return 1;
 	}
 	
 	

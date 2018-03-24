@@ -2,7 +2,10 @@ package com.szilli.mbition032018.challenge.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,96 +42,158 @@ public class LogFileParser {
 
 		List<SearchedString> searchedStrings = getSearchedStrings();
 		logInfo.setSearchedStrings(searchedStrings);
-		logInfo.setMaxSearchedKeyword(new SearchedString("Denmark", 6,"GLOBAL"));
+		logInfo.setMaxSearchedKeyword(logInfo.getSearchedStrings().get(0));
 		
 		List<MovingStatus> movingStatuses = getMovingStatuses();
 		logInfo.setMovingStatuses(movingStatuses);
+		//TODO: Replace the hardcoded current moving state and read from file
 		logInfo.setCurrentStatus(new MovingStatus("VEHICLE_PARKED", 1));
 		
 		
 		List<InputDevice> inputDevices = getInputDevices();
 		logInfo.setInputDevices(inputDevices);
+		//TODO: Replace the hardcoded currently used input device and read from file
 		logInfo.setLastUsedInputDevice(new InputDevice("TOUCHSCREEN", 24));
 		
 		return logInfo;
 	}
 
 	private List<InputDevice> getInputDevices() {
-		
 		List<InputDevice> inputDevices = new ArrayList<>();
-		inputDevices.add(new InputDevice("HARDKEY", 24));
-		inputDevices.add(new InputDevice("OFN", 24));
-		inputDevices.add(new InputDevice("TOUCHPAD", 24));
-		inputDevices.add(new InputDevice("TOUCHSCREEN", 24));
+//		HARDKEY=24
+//
+//				OFN=0
+//				TOUCHPAD=16
+//
+//				TOUCHSCREEN=118
+//
+//				Last Input Device Used=TOUCHSCREEN
+
+		try {
+			System.out.println("\n"+ appProperties.getOutputInputDeviceusageFileName() +" contents ");
+			List<String> logFileContents = IOUtils.readLines(
+					resourceLoader.getResource("classpath:" + appProperties.getOutputInputDeviceusageFileName()).getInputStream());
+			for (String logfileLine : logFileContents) {
+				
+				if(logfileLine != null && !logfileLine.startsWith("Last Input Device Used")  && logfileLine.indexOf("=") > 0) {
+					String[] strAppDetails = logfileLine.split("=");
+					inputDevices.add(new InputDevice(strAppDetails[0], Integer.parseInt(strAppDetails[1])));
+				}
+				
+				System.out.println(logfileLine);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return inputDevices;
 	}
 
 	private List<MovingStatus> getMovingStatuses() {
 		List<MovingStatus> movingStatuses = new ArrayList<>();
-		movingStatuses.add(new MovingStatus("VEHICLE_PARKED", 1));
-		movingStatuses.add(new MovingStatus("VEHICLE_NOT_MOVING", 2));
-		movingStatuses.add(new MovingStatus("VEHICLE_SLOW_SPEED", 3));
-		movingStatuses.add(new MovingStatus("VEHICLE_MOVING", 1));
-		
-		return movingStatuses;
-	}
-
-	private List<SearchedString> getSearchedStrings() {
-		List<SearchedString> searchedStrings = new ArrayList<>();
-//		PHONE _SEARCH
-		searchedStrings.add(new SearchedString("Denmark", 5,"PHONE"));
-		searchedStrings.add(new SearchedString("John", 2,"PHONE"));
-		searchedStrings.add(new SearchedString("Leipzig", 3,"PHONE"));
-		searchedStrings.add(new SearchedString("Mike", 5,"PHONE"));
-		searchedStrings.add(new SearchedString("Simon", 3,"PHONE"));
-
-		// FM _SEARCH
-		searchedStrings.add(new SearchedString("Berlin", 3,"FM"));
-		searchedStrings.add(new SearchedString("Dresden", 3,"FM"));
-		searchedStrings.add(new SearchedString("Munich", 6,"FM"));
-		searchedStrings.add(new SearchedString("Stuttgart", 5,"FM"));
-
-		// GLOBAL _SEARCH
-		searchedStrings.add(new SearchedString("Denmark", 6,"GLOBAL"));
-		searchedStrings.add(new SearchedString("Essen", 3,"GLOBAL"));
-		searchedStrings.add(new SearchedString("Gabriel", 2,"GLOBAL"));
-		searchedStrings.add(new SearchedString("Mike", 3,"GLOBAL"));
-		searchedStrings.add(new SearchedString("Norway", 3,"GLOBAL"));
-		searchedStrings.add(new SearchedString("Sweden", 1,"GLOBAL"));
-		return searchedStrings;
-	}
-
-	private List<Application> getApplications() {
+//		VEHICLE_PARKED=1
+//
+//				VEHICLE_NOT_MOVING=2
+//
+//				VEHICLE_SLOW_SPEED=3
+//
+//				VEHICLE_MOVING=1
+//
+//				Current Movement status=VEHICLE_PARKED
+//
 
 		try {
+			System.out.println("\n"+ appProperties.getOutputMovingStateFileName() +" contents ");
 			List<String> logFileContents = IOUtils.readLines(
-					resourceLoader.getResource("classpath:" + appProperties.getLogFileName()).getInputStream());
+					resourceLoader.getResource("classpath:" + appProperties.getOutputMovingStateFileName()).getInputStream());
 			for (String logfileLine : logFileContents) {
 				// TODO:Loop and create application and put in list
+				
+				if(logfileLine != null && !logfileLine.startsWith("Current Movement status")  && logfileLine.indexOf("=") > 0) {
+					String[] strAppDetails = logfileLine.split("=");
+					movingStatuses.add(new MovingStatus(strAppDetails[0], Integer.parseInt(strAppDetails[1])));
+				}
+				
+				System.out.println(logfileLine);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return movingStatuses;
+	}
 
-		// BLUETOOTH=11.248
-		// CARINFO_CARDATA=10.695
-		// COMFORT_MASSAGE=21.189
-		// FM_DAB=53.384
-		// PHONE=63.615
-		// SETTINGS_SHORTCUTS=12.857
-		// HOME_SCREEN_ACTIVATED=115.817
+	private List<SearchedString> getSearchedStrings() {
+//		PHONE_SEARCH
+//		Denmark=5
+//		John=2
+//		Leipzig=3
+//		Mike=5
+//		Simon=3
+//
+//		FM_SEARCH
+//		Berlin=3
+//		Dresden=3
+//		Munich=6
+//		Stuttgart=5
+//
+//		GLOBAL _SEARCH
+//		Denmark=6
+//		Essen=3
+//		Gabriel=2
+//		Mike=3
+//		Norway=3
+//		Sweden=1
+		List<SearchedString> searchedStrings = new ArrayList<>();
+		try {
+			System.out.println("\n"+ appProperties.getOutputSearchedStringFileName() +" contents ");
+			List<String> logFileContents = IOUtils.readLines(
+					resourceLoader.getResource("classpath:" + appProperties.getOutputSearchedStringFileName()).getInputStream());
+			String appUsed = "";
+			for (String logfileLine : logFileContents) {
+				
+				if(logfileLine != null && logfileLine.contains("_")) {
+					appUsed = logfileLine;
+				}
+				if(logfileLine != null && logfileLine.indexOf("=") > 0) {
+					String[] strAppDetails = logfileLine.split("=");
+					searchedStrings.add(new SearchedString(strAppDetails[0], Integer.parseInt(strAppDetails[1]), appUsed));
+				}
+				System.out.println(logfileLine);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Collections.sort(searchedStrings);
+		return searchedStrings;
+	}
+
+	private List<Application> getApplications() {
+
 		List<Application> lstApplications = new ArrayList<Application>();
-
-		lstApplications.add(new Application("BLUETOOTH", 11.248f));
-		lstApplications.add(new Application("CARINFO_CARDATA", 10.695f));
-		lstApplications.add(new Application("COMFORT_MASSAGE", 21.189f));
-		lstApplications.add(new Application("FM_DAB", 53.384f));
-		lstApplications.add(new Application("PHONE", 63.615f));
-		lstApplications.add(new Application("SETTINGS_SHORTCUTS", 12.857f));
-		lstApplications.add(new Application("HOME_SCREEN_ACTIVATED", 115.817f));
-		lstApplications.add(new Application("GLOBAL", 1f));
+		try {
+			System.out.println("\n"+ appProperties.getOutputTimeSpentPerAppFileName() +" contents ");
+			List<String> logFileContents = IOUtils.readLines(
+					resourceLoader.getResource("classpath:" + appProperties.getOutputTimeSpentPerAppFileName()).getInputStream());
+			for (String logfileLine : logFileContents) {
+				// TODO:Loop and create application and put in list
+				System.out.println(logfileLine);
+				if(logfileLine != null && logfileLine.indexOf("=") > 0) {
+					String[] strAppDetails = logfileLine.split("=");
+					lstApplications.add(new Application(strAppDetails[0], Float.parseFloat(strAppDetails[1])));
+				}
+					
+				
+				
+				
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return lstApplications;
 	}
