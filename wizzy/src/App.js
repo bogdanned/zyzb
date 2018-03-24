@@ -7,11 +7,15 @@ import './App.css';
 import PieChart from './pie';
 import styled from "styled-components";
 import cockpit from "./cockpit.png"
+import rightRect from "./right_rec.png"
+import a1 from "./a1.png"
+import a2 from "./a2.png"
 
 const RowContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   background-color: #2C3238;
+  padding-bottom: 20px;
 `;
 
 
@@ -40,15 +44,33 @@ const Title= styled.h2`
 `;
 
 
-const data2 = [{name: 'Group A', value: 400}, {name: 'Group B', value: 300},
-                  {name: 'Group C', value: 300}, {name: 'Group D', value: 200}];
+const data2 = [{name: 'Group A', value: 200}, {name: 'Group B', value: 300},
+                  {name: 'Group C', value: 900}, {name: 'Group D', value: 200}];
+          
+const data1 = [{name: 'Group A', value: 200}, {name: 'Group B', value: 80},
+{name: 'Group C', value: 200}, {name: 'Group D', value: 200}];
+ 
+
+const data3 = [{name: 'Group A', value: 4}, {name: 'Group B', value: 40},
+                  {name: 'Group C', value: 30}, {name: 'Group D', value: 56}];
                    
 
+
+  const data4 = [{name: 'Group A', value: 2}, {name: 'Group B', value: 9},
+  {name: 'Group C', value: 3}, {name: 'Group D', value: 8}];
+    
+
 class App extends Component {
+  async componentDidMount(){
+    //const rawRes = await fetch("http://localhost:9090/mbition2018/loginfo", {mode: "no-cors"})
+    //console.log(rawRes, "rawData")
+    //const rawData = await rawRes.body()
+    //console.log(rawData)
+  }
   render() {
     return (
       <div className="App">
-        <img src={cockpit} />
+        <img src={cockpit} style={{width: "100%"}}/>
         <div className="App-intro">
         <Title>Mercedes behaivoural Data</Title>
         <RowContainer>
@@ -57,7 +79,7 @@ class App extends Component {
               title={'DESKTOP'}
               subtitle={'Time spent per application'}
               activeIndex={0}
-              data={data2} />
+              data={data1} />
           </PieContainer>
           <PieContainerGrey >
             <PieChart
@@ -71,16 +93,21 @@ class App extends Component {
               title={'SPEEDING'}
               subtitle={'Movement status of the car'}        
               activeIndex={2}
-              data={data2}/>
+              data={data3}/>
           </PieContainer>
           <PieContainer>
             <PieChart
               title={'London'}
               subtitle={'Use frecueny of search word'}
               activeIndex={3}
-              data={data2}/>
+              data={data4}/>
           </PieContainer>
         </RowContainer>
+        <RowContainer>
+        <img src={a1} style={{height: "250px"}}/>
+        <img src={a2} style={{height: "250px"}}/>
+
+          </RowContainer>
         </div>
       </div>
     );
